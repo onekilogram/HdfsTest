@@ -110,9 +110,9 @@ public class HDFSTest {
 
 	public static void main(String[] args) throws IOException, URISyntaxException {
 		// 下面做的是显示目录下所有文件
-		ListDirAll("hdfs://ubuntu:9000/user/kqiao");
+		ListDirAll("hdfs://master:9000/user/kg");
 
-		String fileWrite = "hdfs://ubuntu:9000/user/kqiao/test/FileWrite";
+		String fileWrite = "hdfs://master:9000/user/kqiao/test/FileWrite";
 		String words = "This words is to write into file!\n";
 		WriteToHDFS(fileWrite, words);
 		// 这里我们读取fileWrite的内容并显示在终端
