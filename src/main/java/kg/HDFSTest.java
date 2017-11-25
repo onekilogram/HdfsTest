@@ -1,6 +1,8 @@
 package kg;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -13,6 +15,8 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.permission.FsPermission;
+import org.apache.hadoop.hdfs.DistributedFileSystem;
 import org.apache.hadoop.io.IOUtils;
 //kg
 public class HDFSTest {
@@ -22,8 +26,16 @@ public class HDFSTest {
 			throws IOException, URISyntaxException {
 		Configuration conf = new Configuration();
 		FileSystem fs = FileSystem.get(URI.create(file), conf);
+		
 		Path path = new Path(file);
+		
+		DistributedFileSystem dfs= (DistributedFileSystem) DistributedFileSystem.get(URI.create(file), conf);
+		
+		//dfs.create(path, permission, overwrite, bufferSize, replication, blockSize, progress, favoredNodes);
+		
 		FSDataOutputStream out = fs.create(path); // 创建文件
+		
+		//fs.create
 
 		// 两个方法都用于文件写入，好像一般多使用后者
 		out.writeBytes(words);
@@ -112,13 +124,30 @@ public class HDFSTest {
 		// 下面做的是显示目录下所有文件
 		ListDirAll("hdfs://master:9000/user/kg");
 
-		String fileWrite = "hdfs://master:9000/user/kqiao/test/FileWrite";
+		String fileWrite = "hdfs://master:9000/user/kg/test/FileWrite";
 		String words = "This words is to write into file!\n";
 		WriteToHDFS(fileWrite, words);
 		// 这里我们读取fileWrite的内容并显示在终端
 		ReadFromHDFS(fileWrite);
 		// 这里删除上面的fileWrite文件
 		DeleteHDFSFile(fileWrite);
+		
+		DistributedFileSystem dfs = new DistributedFileSystem();
+		
+		Path path = new Path("hdfs://master:9000/user/kg/kggg");
+		
+		//InetSocketAddress arbitraryAddrs[] = new InetSocketAddress[3];
+		
+//		InetAddress addr1 = InetAddress.getByName("192.168.168.146");  
+//		InetSocketAddress[] array=new InetSocketAddress[1];
+//		InetSocketAddress adds = new InetSocketAddress(addr1,50010);
+//		array[0] = adds;
+//		FSDataOutputStream out = dfs.create(path, FsPermission.getDefault(), true,
+//		          4096, (short)3, 4096L, array);
+		byte[] SOME_BYTES = new String("foo").getBytes();
+		//out.write(SOME_BYTES);
+	    //out.close();
+	    
 		// 假设本地有一个uploadFile，这里上传该文件到HDFS
 		// String LocalFile =
 		// "file:///home/kqiao/hadoop/MyHadoopCodes/uploadFile";
